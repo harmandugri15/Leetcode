@@ -8,17 +8,16 @@ class Solution {
         int maxLength = 0;
         int left = 0;
 
-        for (int right = 0; right < n; right++) {
-            char currentChar = s[right];
-
-            while (inWindow[currentChar]) {
-                inWindow[s[left]] = false;
+        for(int right=0;right<n;right++){
+            char current=s[right];
+            while(inWindow[current]){
+                inWindow[s[left]]=false;
                 left++;
             }
-            inWindow[currentChar] = true;
-
-            maxLength = Math.max(maxLength, right - left + 1);
+            inWindow[current]=true;
+            maxLength=Math.max(maxLength,right-left+1);
         }
+
 
         return maxLength;
     }
