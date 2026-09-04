@@ -1,114 +1,105 @@
-import java.util.Arrays;
+class Solution {
+    public String isPossible(int n, int[] freqIn, String cur, char mid, String target){
+        int[] freq = freqIn.clone(); // copy
 
-public class Solution {
+        // build the largest possible arrangement of remaining chars (descending order)
+        for(int i=25; i>=0; i--){
+            while(freq[i] > 0){
+                cur += (char)('a'+i);
+                freq[i]--;
+            }
+        }
+
+        if(mid!='#'){
+            // odd-length palindrome: left half + mid + reverse(left half)
+            String temp = cur;
+            cur += mid;
+            temp = new StringBuilder(temp).reverse().toString();
+            cur += temp;
+        }
+        else {
+            // even-length palindrome: left half + reverse(left half)
+            String temp = cur;
+            temp = new StringBuilder(temp).reverse().toString();
+            cur += temp;
+        }
+
+        // feasibility check: only valid if this (largest possible) candidate beats target
+        return cur.compareTo(target) > 0 ? cur : "";
+    }
+
     public String lexPalindromicPermutation(String s, String target) {
         int n = s.length();
-        int[] cnt = new int[26];
-        
-        // 1. Calculate frequency distribution
-        for (char c : s.toCharArray()) {
-            cnt[c - 'a']++;
+
+        int[] freq = new int[26];
+
+        if(n==1){
+            if(s.compareTo(target) > 0) return s;
+            else return "";
         }
-        
-        // 2. Validate palindrome availability
+
+        for(char c : s.toCharArray())
+            freq[c-'a']++;
+
+        char mid = '#';
         int oddCount = 0;
-        char midChar = '\0';
-        for (int i = 0; i < 26; i++) {
-            if (cnt[i] % 2 != 0) {
+
+        for(int i=0; i<26; i++){
+            if(freq[i]%2 != 0){
+                // odd count -> this becomes the middle character
+                mid = (char)('a'+i);
+                freq[i]--;
                 oddCount++;
-                midChar = (char) ('a' + i);
             }
+
+            freq[i] /= 2; // each char used freq[i]/2 times in the left half
+
+            if(oddCount>=2) return ""; // more than one odd-frequency char -> can't form a palindrome
         }
-        if (oddCount > 1) {
-            return ""; // Palindrome is not possible
-        }
-        
-        // Target budget allocations exclusively for the left half
-        int[] leftCounts = new int[26];
-        for (int i = 0; i < 26; i++) {
-            leftCounts[i] = cnt[i] / 2;
-        }
-        
-        int halfLen = n / 2;
-        
-        // 3. Attempt an exact prefix match with target's first half
-        boolean canExact = true;
-        int[] curCounts = leftCounts.clone();
-        for (int i = 0; i < halfLen; i++) {
-            int tIdx = target.charAt(i) - 'a';
-            if (curCounts[tIdx] > 0) {
-                curCounts[tIdx]--;
-            } else {
-                canExact = false;
-                break;
-            }
-        }
-        
-        if (canExact) {
-            String leftPart = target.substring(0, halfLen);
-            String fullPal = buildPalindrome(leftPart, midChar);
-            if (fullPal.compareTo(target) > 0) {
-                return fullPal;
-            }
-        }
-        
-        // 4. Backtrack: Look for the rightmost index to place a strictly larger character
-        for (int i = halfLen - 1; i >= 0; i--) {
-            curCounts = leftCounts.clone();
-            boolean possible = true;
-            
-            // Check if the exact sub-prefix target[0...i-1] can be fulfilled
-            for (int j = 0; j < i; j++) {
-                int tIdx = target.charAt(j) - 'a';
-                if (curCounts[tIdx] > 0) {
-                    curCounts[tIdx]--;
-                } else {
-                    possible = false;
-                    break;
-                }
-            }
-            if (!possible) continue;
-            
-            // Look for the smallest available character strictly greater than target[i]
-            int tIdx = target.charAt(i) - 'a';
-            int chosenIdx = -1;
-            for (int k = tIdx + 1; k < 26; k++) {
-                if (curCounts[k] > 0) {
-                    chosenIdx = k;
-                    break;
-                }
-            }
-            
-            if (chosenIdx != -1) {
-                curCounts[chosenIdx]--;
-                
-                // Form the validated left prefix segment
-                StringBuilder leftPartSb = new StringBuilder(target.substring(0, i));
-                leftPartSb.append((char) ('a' + chosenIdx));
-                
-                // Fill up trailing spots sequentially in ascending order for lexicographically lowest result
-                for (int k = 0; k < 26; k++) {
-                    while (curCounts[k] > 0) {
-                        leftPartSb.append((char) ('a' + k));
-                        curCounts[k]--;
+
+        n /= 2; // we only need to construct the left half now
+
+        String res = "", prefix = "";
+
+        // greedily build the left half, position by position
+        for(int i=0; i<n; i++){
+
+            String cur = prefix;
+            boolean isThereAny = false;
+
+            // try smallest character first ('a' -> 'z')
+            for(int j=0; j<26; j++){
+
+                if(freq[j] > 0){
+
+                    freq[j]--;
+                    cur += (char)('a'+j);
+
+                    // check if this prefix can still lead to a palindrome > target
+                    String isPos = isPossible(n, freq, cur, mid, target);
+
+                    if(!isPos.equals("")){
+                        prefix = cur;      // keep this character, lock in the prefix
+                        isThereAny = true;
+
+                        if(res.equals(""))
+                            res = isPos;
+                        else
+                            res = res.compareTo(isPos) < 0 ? res : isPos; // track smallest valid candidate
+
+                        break;
                     }
+
+                    // this character doesn't work, undo and try the next one
+                    freq[j]++;
+                    cur = cur.substring(0, cur.length()-1);
                 }
-                
-                return buildPalindrome(leftPartSb.toString(), midChar);
             }
+
+            if(!isThereAny)
+                return ""; // no character works at this position -> impossible
         }
-        
-        return "";
-    }
-    
-    // Helper function to assemble a mirrored palindrome
-    private String buildPalindrome(String leftHalf, char midChar) {
-        StringBuilder sb = new StringBuilder(leftHalf);
-        String reversed = new StringBuilder(leftHalf).reverse().toString();
-        if (midChar != '\0') {
-            sb.append(midChar);
-        }
-        sb.append(reversed);
-        return sb.toString();
+
+        return res; 
     }
 }
