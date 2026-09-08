@@ -1,13 +1,11 @@
 class Solution {
     public int countCommas(int n) {
-        int totalCommas = 0;
-        long threshold = 1000;
-        
-        while (n >= threshold) {
-            totalCommas += (n - threshold + 1);
-            threshold *= 1000; 
+        int a=0;
+        int threshold=1000;
+        while(n>=threshold){
+            a+=(n-threshold+1);
+            threshold*=1000;
         }
-        
-        return totalCommas;
+        return a;
     }
 }
