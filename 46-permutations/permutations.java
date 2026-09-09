@@ -14,6 +14,7 @@ class Solution {
 
             list.remove(list.size()-1);
             used[i]=false;
+            
         }
 
     }
