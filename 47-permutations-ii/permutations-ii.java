@@ -10,6 +10,10 @@ class Solution {
                 continue;
             }
 
+            if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
+                continue;
+            }
+
             list.add(nums[i]);
             used[i]=true;
             backtrack(nums,used,list,result);
@@ -20,16 +24,9 @@ class Solution {
     }
     public List<List<Integer>> permuteUnique(int[] nums) {
         List<List<Integer>> result=new ArrayList<>();
+        Arrays.sort(nums);
         boolean[] bb=new boolean[nums.length];
         backtrack(nums,bb,new ArrayList<>(),result);
-        HashSet<List<Integer>> hset=new HashSet<>();
-        for(List i:result){
-            hset.add(i);
-        }
-        List<List<Integer>> result1=new ArrayList<>();
-        for(List i:hset){
-            result1.add(i);
-        }
-        return result1;
+        return result;
     }
 }
