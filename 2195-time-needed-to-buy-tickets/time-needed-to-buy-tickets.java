@@ -1,6 +1,3 @@
-import java.util.LinkedList;
-import java.util.Queue;
-
 class Solution { 
     public int timeRequiredToBuy(int[] tickets, int k) { 
         Queue<Integer> q = new LinkedList<>(); 
