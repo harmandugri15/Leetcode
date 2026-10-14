@@ -4,16 +4,18 @@ class Solution {
         for(int i:nums){
             hmap.put(i,hmap.getOrDefault(i,0)+1);
         }
+
         PriorityQueue<Integer> pq=new PriorityQueue();
         for(int i:hmap.values()){
             pq.add(i);
         }
+
         ArrayList<Integer> arr=new ArrayList<>();
 
         while(pq.size()>k){
             pq.poll();
         }
-        int index=0;
+        
          for(int i:hmap.keySet()){
             if(pq.contains(hmap.get(i))){
                 arr.add(i);
