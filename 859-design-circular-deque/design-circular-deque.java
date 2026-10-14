@@ -1,9 +1,11 @@
 class MyCircularDeque {
+    
     public int[] arr;
     public int capacity;
     public int front;
     public int rear;
     int size=0;
+
     public MyCircularDeque(int k) {
         arr=new int[k];
         this.capacity=k;
@@ -89,16 +91,3 @@ class MyCircularDeque {
         }
     }
 }
-
-/**
- * Your MyCircularDeque object will be instantiated and called as such:
- * MyCircularDeque obj = new MyCircularDeque(k);
- * boolean param_1 = obj.insertFront(value);
- * boolean param_2 = obj.insertLast(value);
- * boolean param_3 = obj.deleteFront();
- * boolean param_4 = obj.deleteLast();
- * int param_5 = obj.getFront();
- * int param_6 = obj.getRear();
- * boolean param_7 = obj.isEmpty();
- * boolean param_8 = obj.isFull();
- */
