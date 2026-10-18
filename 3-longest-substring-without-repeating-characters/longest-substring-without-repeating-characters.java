@@ -1,24 +1,19 @@
 class Solution {
-    public int lengthOfLongestSubstring(String se) {
-
-        boolean[] inWindow = new boolean[128];
-        char[] s = se.toCharArray();
-        int n = s.length;
-        
-        int maxLength = 0;
-        int left = 0;
-
+    public int lengthOfLongestSubstring(String s) {
+        int left=0;
+        char[] x=s.toCharArray();
+        int n=x.length;
+        int maxlen=0;
+        boolean[] inwindow=new boolean[150];
         for(int right=0;right<n;right++){
-            char current=s[right];
-            while(inWindow[current]){
-                inWindow[s[left]]=false;
+            char ch=x[right];
+            while(inwindow[ch]){
+                inwindow[x[left]]=false;
                 left++;
             }
-            inWindow[current]=true;
-            maxLength=Math.max(maxLength,right-left+1);
+            inwindow[ch]=true;
+            maxlen=Math.max(maxlen,right-left+1);
         }
-
-
-        return maxLength;
+        return maxlen;
     }
 }
