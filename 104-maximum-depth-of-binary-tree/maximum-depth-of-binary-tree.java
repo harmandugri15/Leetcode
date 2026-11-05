@@ -18,22 +18,8 @@ class Solution {
         if(root==null){
             return 0;
         }
-        Queue<TreeNode> q=new LinkedList<>();
-        q.offer(root);
-        int levels=1;
-        while(!q.isEmpty()){
-            int level=q.size();
-            for(int i=0;i<level;i++){
-                TreeNode curr=q.poll();
-                if(curr.left!=null){
-                    q.offer(curr.left);
-                }
-                if(curr.right!=null){
-                    q.offer(curr.right);
-                }
-            }
-            levels++;
-        }
-        return levels-1;
+        int left=1+maxDepth(root.left);
+        int right=1+maxDepth(root.right);
+        return Math.max(left,right);
     }
 }
