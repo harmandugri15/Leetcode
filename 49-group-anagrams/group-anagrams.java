@@ -1,21 +1,16 @@
 class Solution {
-    public static String s(String a){
-        char[] a1=a.toCharArray();
-        Arrays.sort(a1);
-        StringBuilder sb=new StringBuilder();
-        for(char x:a1){
-            sb.append(x);
-        }
-        return sb.toString();
+    public void sortString(String s){
+
     }
     public List<List<String>> groupAnagrams(String[] strs) {
-        HashMap<String ,List<String>> map=new HashMap();
-        for(int i=0;i<strs.length;i++){
-            String word=s(strs[i]);
-            if(!map.containsKey(word)){
-                map.put(word,new ArrayList<>());
-            }
-            map.get(word).add(strs[i]);
+        HashMap<String,List<String>> map=new HashMap<>();
+        for(String st:strs){
+            char[] x=st.toCharArray();
+            Arrays.sort(x);
+            String newstr=new String(x);
+
+            map.putIfAbsent(newstr,new ArrayList<>());
+            map.get(newstr).add(st);
         }
         return new ArrayList<>(map.values());
     }
