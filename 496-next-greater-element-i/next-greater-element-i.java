@@ -19,7 +19,5 @@ class Solution {
             arr[i]=hmap.get(nums1[i]);
         }
         return arr;
-
-
     }
 }
