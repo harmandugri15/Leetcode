@@ -1,17 +1,18 @@
 class Solution {
     public char kthCharacter(int k) {
-        StringBuilder sb=new StringBuilder("a");
-        while(sb.length() < k){
-            int curr=sb.length();
-            for(int i=0;i<curr;i++){
-                if(sb.charAt(i)=='z'){
-                    sb.append('a');
-                }
-                else{
-                    sb.append(  (char) (sb.charAt(i)+1)  );
-                }
-            }
+        if(k==1){
+            return 'a';
         }
-        return sb.charAt(k-1);
+        int half=1;
+        while(half*2<k){
+            half=half*2;
+        }
+        char c=kthCharacter(k-half);
+        if(c=='z'){
+            return 'a';
+        }
+        else{
+            return (char) (c+1);
+        }
     }
 }
